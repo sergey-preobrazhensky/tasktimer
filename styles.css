@@ -150,6 +150,16 @@ body {
   background: var(--bg-2);
 }
 
+.btn-danger {
+  background: var(--danger-dim);
+  color: var(--danger);
+  border: 1px solid rgba(224, 122, 95, 0.3);
+}
+
+.btn-danger:hover {
+  background: rgba(224, 122, 95, 0.22);
+}
+
 .btn-icon {
   display: inline-flex;
   align-items: center;
@@ -333,6 +343,10 @@ body {
   border-top: 2px solid rgba(61, 186, 140, 0.35);
 }
 
+.total[hidden] {
+  display: none;
+}
+
 .total-label {
   font-size: 0.9rem;
   font-weight: 600;
@@ -345,6 +359,16 @@ body {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--accent);
+}
+
+.list-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.85rem;
+}
+
+.list-actions[hidden] {
+  display: none;
 }
 
 .modal {

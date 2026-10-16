@@ -22,6 +22,8 @@ const els = {
   empty: document.getElementById("empty-state"),
   totalBar: document.getElementById("total-bar"),
   totalTime: document.getElementById("total-time"),
+  listActions: document.getElementById("list-actions"),
+  deleteAll: document.getElementById("delete-all"),
   filters: document.querySelectorAll(".filter"),
   modal: document.getElementById("edit-modal"),
   editForm: document.getElementById("edit-form"),
@@ -59,6 +61,21 @@ function normalizeTask(raw) {
 function saveTasks() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
+
+function syncFromStorage() {
+  tasks = loadTasks();
+  if (editingId && !findTask(editingId)) {
+    editingId = null;
+    if (els.modal.open) els.modal.close();
+  }
+  render();
+}
+
+window.addEventListener("storage", (event) => {
+  if (event.storageArea !== localStorage) return;
+  if (event.key !== STORAGE_KEY && event.key !== null) return;
+  syncFromStorage();
+});
 
 function uid() {
   return crypto.randomUUID?.() ?? `t-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -128,6 +145,14 @@ function createTask(title) {
 /** @param {string} id */
 function deleteTask(id) {
   tasks = tasks.filter((t) => t.id !== id);
+  saveTasks();
+  render();
+}
+
+function deleteAllTasks() {
+  if (!tasks.length) return;
+  if (!confirm(`Удалить все задачи (${tasks.length})?`)) return;
+  tasks = [];
   saveTasks();
   render();
 }
@@ -255,6 +280,7 @@ function render() {
     `;
   }).join("");
 
+  els.listActions.hidden = tasks.length === 0;
   updateTotal(visible);
 }
 
@@ -296,6 +322,10 @@ els.form.addEventListener("submit", (e) => {
   createTask(els.title.value);
   els.title.value = "";
   els.title.focus();
+});
+
+els.deleteAll.addEventListener("click", () => {
+  deleteAllTasks();
 });
 
 els.list.addEventListener("click", (e) => {
@@ -355,6 +385,10 @@ els.editForm.addEventListener("submit", (e) => {
 
 els.modal.addEventListener("close", () => {
   editingId = null;
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") syncFromStorage();
 });
 
 setInterval(tick, 250);
