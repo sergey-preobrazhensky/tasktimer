@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="TaskTimer">
+  <rect width="32" height="32" rx="8" fill="#171d25"/>
+  <circle cx="16" cy="17" r="10" fill="none" stroke="#3dba8c" stroke-width="2.25"/>
+  <circle cx="16" cy="17" r="1.4" fill="#3dba8c"/>
+  <path d="M16 11.5v5.2l3.6 2.2" fill="none" stroke="#e8dcc4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 5.5h8" fill="none" stroke="#3dba8c" stroke-width="2" stroke-linecap="round"/>
+  <path d="M16 5.5v2" fill="none" stroke="#3dba8c" stroke-width="2" stroke-linecap="round"/>
+</svg>
