@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskTimer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <h1 class="brand-name">TaskTimer</h1>
+      </div>
+      <p class="header-sub">Учёт времени по задачам</p>
+    </header>
+
+    <form class="create-form" id="create-form" autocomplete="off">
+      <input
+        type="text"
+        id="task-title"
+        name="title"
+        placeholder="Новая задача…"
+        maxlength="120"
+        required
+      />
+      <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+
+    <div class="filters" role="tablist" aria-label="Фильтр задач">
+      <button type="button" class="filter is-active" data-filter="active" role="tab" aria-selected="true">Активные</button>
+      <button type="button" class="filter" data-filter="done" role="tab" aria-selected="false">Завершённые</button>
+      <button type="button" class="filter" data-filter="all" role="tab" aria-selected="false">Все</button>
+    </div>
+
+    <ul class="task-list" id="task-list" aria-live="polite"></ul>
+
+    <p class="empty" id="empty-state" hidden>Пока нет задач. Добавьте первую выше.</p>
+  </div>
+
+  <dialog class="modal" id="edit-modal">
+    <form method="dialog" class="modal-form" id="edit-form">
+      <h2 class="modal-title">Изменить задачу</h2>
+      <label class="field">
+        <span>Название</span>
+        <input type="text" id="edit-title" name="title" maxlength="120" required />
+      </label>
+      <label class="field">
+        <span>Время (чч:мм:сс)</span>
+        <input type="text" id="edit-time" name="time" pattern="\d{1,3}:[0-5]\d:[0-5]\d" placeholder="0:00:00" required />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary" value="save">Сохранить</button>
+        <button type="submit" class="btn btn-ghost" value="cancel">Отмена</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

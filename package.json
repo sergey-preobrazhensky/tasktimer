@@ -1,0 +1,10 @@
+{
+  "name": "tasktimer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simple frontend task time tracker",
+  "scripts": {
+    "start": "python3 -m http.server 5173",
+    "serve": "python3 -m http.server 5173"
+  }
+}
