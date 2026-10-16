@@ -318,6 +318,33 @@ body {
   margin: 0;
 }
 
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.95rem 1.1rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  border-top: 2px solid rgba(61, 186, 140, 0.35);
+}
+
+.total-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.total-time {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
 .modal {
   border: 1px solid var(--line);
   border-radius: 14px;

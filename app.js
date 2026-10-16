@@ -20,6 +20,8 @@ const els = {
   title: document.getElementById("task-title"),
   list: document.getElementById("task-list"),
   empty: document.getElementById("empty-state"),
+  totalBar: document.getElementById("total-bar"),
+  totalTime: document.getElementById("total-time"),
   filters: document.querySelectorAll(".filter"),
   modal: document.getElementById("edit-modal"),
   editForm: document.getElementById("edit-form"),
@@ -184,6 +186,19 @@ function filteredTasks() {
   return tasks;
 }
 
+/** @param {Task[]} list */
+function totalElapsed(list) {
+  return list.reduce((sum, task) => sum + getElapsed(task), 0);
+}
+
+function updateTotal(visible = filteredTasks()) {
+  const hasTasks = visible.length > 0;
+  els.totalBar.hidden = !hasTasks;
+  if (hasTasks) {
+    els.totalTime.textContent = formatTime(totalElapsed(visible));
+  }
+}
+
 /** @param {Task} task */
 function taskActionsHtml(task) {
   if (task.done) {
@@ -238,6 +253,8 @@ function render() {
       </li>
     `;
   }).join("");
+
+  updateTotal(visible);
 }
 
 /** @param {string} text */
@@ -258,6 +275,7 @@ function tick() {
     if (!task) continue;
     node.textContent = formatTime(getElapsed(task));
   }
+  if (nodes.length > 0) updateTotal();
 }
 
 /** @param {string} id */
