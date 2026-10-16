@@ -112,11 +112,12 @@ function stopAllRunning() {
 function createTask(title) {
   const trimmed = title.trim();
   if (!trimmed) return;
+  const noActive = !tasks.some((t) => !t.done);
   tasks.unshift({
     id: uid(),
     title: trimmed,
     elapsedMs: 0,
-    runningSince: null,
+    runningSince: noActive ? Date.now() : null,
     done: false,
     createdAt: Date.now(),
   });
