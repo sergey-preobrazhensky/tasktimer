@@ -291,16 +291,84 @@ body {
   margin-top: 0.35rem;
 }
 
-.task-time {
+.task-time-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  max-width: 100%;
+}
+
+.task-time,
+.task-hours {
   font-family: var(--mono);
   font-size: 0.95rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+  line-height: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.task-time {
   color: var(--accent);
+}
+
+.task-time:hover,
+.task-hours:hover {
+  color: var(--text);
+}
+
+.task-time:focus-visible,
+.task-hours:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
 }
 
 .task.is-running .task-time {
   color: var(--running);
+}
+
+.task.is-running .task-time:hover {
+  color: var(--text);
+}
+
+.task-hours {
+  min-width: 0;
+  width: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--text-muted);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.task:not(.is-running) .task-time-wrap:hover .task-hours,
+.task:not(.is-running) .task-time-wrap:focus-within .task-hours {
+  width: auto;
+  margin-left: 0.55rem;
+  overflow: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.task-time.is-copied,
+.task-hours.is-copied,
+.task.is-running .task-time.is-copied {
+  color: #fff;
+}
+
+@media (hover: none) {
+  .task:not(.is-running) .task-hours {
+    width: auto;
+    margin-left: 0.55rem;
+    overflow: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .task-badge {

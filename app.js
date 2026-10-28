@@ -96,6 +96,14 @@ function formatTime(ms) {
   return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+/** Hours rounded to one decimal, with a comma: 1:30:00 -> "1,5". @param {number} ms */
+function formatHours(ms) {
+  const tenths = Math.round(Math.max(0, ms) / 360000);
+  const whole = Math.trunc(tenths / 10);
+  const frac = Math.abs(tenths % 10);
+  return `${whole},${frac}`;
+}
+
 /** @param {string} value @returns {number | null} */
 function parseTime(value) {
   const match = value.trim().match(/^(\d{1,3}):([0-5]\d):([0-5]\d)$/);
@@ -261,15 +269,22 @@ function render() {
 
   els.list.innerHTML = visible.map((task) => {
     const running = task.runningSince != null;
+    const elapsed = getElapsed(task);
     const classes = ["task"];
     if (running) classes.push("is-running");
     if (task.done) classes.push("is-done");
+    const hours = running
+      ? ""
+      : `<button type="button" class="task-hours" data-copy title="Скопировать">${formatHours(elapsed)}</button>`;
     return `
       <li class="${classes.join(" ")}" data-id="${task.id}">
         <div class="task-main">
           <p class="task-title">${escapeHtml(task.title)}</p>
           <div class="task-meta">
-            <span class="task-time" data-time>${formatTime(getElapsed(task))}</span>
+            <span class="task-time-wrap">
+              <button type="button" class="task-time" data-copy data-time title="Скопировать">${formatTime(elapsed)}</button>
+              ${hours}
+            </span>
             ${running ? '<span class="task-badge">идёт</span>' : ""}
           </div>
         </div>
@@ -328,7 +343,59 @@ els.deleteAll.addEventListener("click", () => {
   deleteAllTasks();
 });
 
+/** @type {WeakMap<HTMLElement, number>} */
+const copyTimers = new WeakMap();
+
+/** @param {string} text */
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.append(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      area.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+}
+
+/** @param {HTMLElement} el */
+function markCopied(el) {
+  const prev = el.dataset.copyTitle ?? el.title;
+  el.dataset.copyTitle = prev;
+  el.classList.add("is-copied");
+  el.title = "Скопировано";
+  const existing = copyTimers.get(el);
+  if (existing) clearTimeout(existing);
+  copyTimers.set(el, window.setTimeout(() => {
+    el.classList.remove("is-copied");
+    el.title = el.dataset.copyTitle || "Скопировать";
+    copyTimers.delete(el);
+  }, 900));
+}
+
 els.list.addEventListener("click", (e) => {
+  const copyTarget = e.target instanceof Element ? e.target.closest("[data-copy]") : null;
+  if (copyTarget instanceof HTMLElement) {
+    const text = copyTarget.textContent?.trim() ?? "";
+    if (text) {
+      copyText(text).then((ok) => {
+        if (ok) markCopied(copyTarget);
+      });
+    }
+    return;
+  }
+
   const btn = e.target instanceof Element ? e.target.closest("[data-action]") : null;
   if (!(btn instanceof HTMLElement)) return;
   const item = btn.closest(".task");
